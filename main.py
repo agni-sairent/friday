@@ -16,7 +16,7 @@ from models.Work import Work
 from models.Note import Note
 
 app = FastAPI()
-HEIMDALL_URL = 'http://heimdall:8000'
+HEIMDALL_URL = 'http://heimdall:8000/heimdall/api'
 
 origins = [
     "http://heimdall",
@@ -46,7 +46,7 @@ async def get_user_uuid(token: str):
         return None
 
 
-@app.get('/subject/')
+@app.get('/friday/api/subject/')
 async def list_subjects(token: str):
     user_uuid = await get_user_uuid(token)
     if user_uuid is None:
@@ -59,7 +59,7 @@ async def list_subjects(token: str):
         return {'status': 404}
 
 
-@app.get('/subject/{weekday}/')
+@app.get('/friday/api/subject/{weekday}/')
 async def list_subject_weekday(weekday: int, token: str):
     user_uuid = await get_user_uuid(token)
     if user_uuid is None:
@@ -72,7 +72,7 @@ async def list_subject_weekday(weekday: int, token: str):
         return {'status': 404}
 
 
-@app.post('/subject/')
+@app.post('/friday/api/subject/')
 async def create_subject(request: TokenAuthorizedSubjectCreateRequest):
     user_uuid = await get_user_uuid(request.token)
     if user_uuid is None:
@@ -89,7 +89,7 @@ async def create_subject(request: TokenAuthorizedSubjectCreateRequest):
         return {'status': 500, 'error': e}
 
 
-@app.delete('/subject/{subject_id}/')
+@app.delete('/friday/api/subject/{subject_id}/')
 async def remove_subject(subject_id: str, token: str):
     user_uuid = await get_user_uuid(token)
     if user_uuid is None:
@@ -103,11 +103,11 @@ async def remove_subject(subject_id: str, token: str):
         return {'status': 500, 'error': e}
 
 
-@app.get('/homework/')
+@app.get('/friday/api/homework/')
 async def list_homework(token: str):
     user_uuid = await get_user_uuid(token)
     if user_uuid is None:
-        return {'status': 404}
+        return {'status': 404, 'message': 'Token validation failed'}
 
     try:
         query = Homework.select().where(Homework.user_reference == user_uuid)
@@ -116,7 +116,7 @@ async def list_homework(token: str):
         return {'status': 404}
 
 
-@app.post('/homework/')
+@app.post('/friday/api/homework/')
 async def create_subject(request: TokenAuthorizedHomeworkCreateRequest):
     user_uuid = await get_user_uuid(request.token)
     if user_uuid is None:
@@ -131,7 +131,7 @@ async def create_subject(request: TokenAuthorizedHomeworkCreateRequest):
         return {'status': 500, 'error': e}
 
 
-@app.delete('/homework/{homework_id}/')
+@app.delete('/friday/api/homework/{homework_id}/')
 async def remove_subject(homework_id: str, token: str):
     user_uuid = await get_user_uuid(token)
     if user_uuid is None:
@@ -145,7 +145,7 @@ async def remove_subject(homework_id: str, token: str):
         return {'status': 500, 'error': e}
 
 
-@app.get('/work/')
+@app.get('/friday/api/work/')
 async def list_work(token: str):
     user_uuid = await get_user_uuid(token)
     if user_uuid is None:
@@ -158,7 +158,7 @@ async def list_work(token: str):
         return {'status': 404}
 
 
-@app.post('/work/')
+@app.post('/friday/api/work/')
 async def create_subject(request: TokenAuthorizedWorkCreateRequest):
     user_uuid = await get_user_uuid(request.token)
     if user_uuid is None:
@@ -174,7 +174,7 @@ async def create_subject(request: TokenAuthorizedWorkCreateRequest):
         return {'status': 500, 'error': e}
 
 
-@app.get('/note/')
+@app.get('/friday/api/note/')
 async def list_notes(token: str):
     user_uuid = await get_user_uuid(token)
     if user_uuid is None:
@@ -187,7 +187,7 @@ async def list_notes(token: str):
         return {'status': 404}
 
 
-@app.post('/note/')
+@app.post('/friday/api/note/')
 async def create_subject(request: TokenAuthorizedNoteCreateRequest):
     user_uuid = await get_user_uuid(request.token)
     if user_uuid is None:
